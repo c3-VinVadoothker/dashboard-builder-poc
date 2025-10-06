@@ -14,6 +14,18 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState(state.dashboard.dashboardName);
 
+  const handleStartEditing = () => {
+    // Only allow editing when in edit mode
+    if (!isEditMode) return;
+    
+    // Use suggested name if current name is "Custom Dashboard"
+    const initialValue = state.dashboard.dashboardName === 'Custom Dashboard' 
+      ? state.dashboard.suggestedName || 'Annual Assessment Uniformity Audit'
+      : state.dashboard.dashboardName;
+    setTempTitle(initialValue);
+    setIsEditingTitle(true);
+  };
+
   const handleTitleSave = () => {
     if (tempTitle.trim()) {
       saveStateBeforeChange({ type: 'UPDATE_DASHBOARD_NAME', payload: tempTitle.trim() });
@@ -22,7 +34,6 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
   };
 
   const handleUndo = () => {
-    console.log('Undo clicked - Current history index:', state.historyIndex, 'History length:', state.history.length);
     dispatch({ type: 'UNDO' });
   };
 
@@ -41,7 +52,7 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 p-4">
+    <div className="bg-white border-b border-gray-300 p-3">
       <div className="flex items-center justify-between">
         {/* Left side - Title */}
         <div className="flex items-center space-x-4">
@@ -52,15 +63,17 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
               onChange={(e) => setTempTitle(e.target.value)}
               onBlur={handleTitleSave}
               onKeyPress={(e) => e.key === 'Enter' && handleTitleSave()}
-              className="text-lg font-medium text-gray-900 bg-transparent border-b border-blue-500 focus:outline-none focus:border-blue-600"
+              className="text-lg font-semibold text-gray-900 bg-transparent border-b border-gray-400 focus:outline-none focus:border-gray-600"
               autoFocus
             />
           ) : (
             <div 
-              className="flex items-center space-x-2 cursor-pointer group"
-              onClick={() => isEditMode && setIsEditingTitle(true)}
+              className={`flex items-center space-x-2 group ${
+                isEditMode ? 'cursor-pointer' : 'cursor-default'
+              }`}
+              onClick={handleStartEditing}
             >
-              <h2 className="text-lg font-medium text-gray-900">
+              <h2 className="text-lg font-semibold text-gray-900">
                 {state.dashboard.dashboardName}
               </h2>
               {isEditMode && (
@@ -71,19 +84,21 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
         </div>
 
         {/* Center - Status */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-center space-x-4 flex-1">
           {isEditMode && (
-            <div className="flex items-center space-x-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-md">
-              <span className="text-sm font-medium">Editing</span>
-            </div>
-          )}
-          <div className="text-sm text-gray-500">
-            Auto-saved: {formatLastSaved()}
-          </div>
-          {state.hasUnsavedChanges && (
-            <div className="text-sm text-orange-600">
-              • Unsaved changes
-            </div>
+            <>
+              <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 text-gray-800 border border-gray-300">
+                <span className="text-sm font-medium">Editing</span>
+              </div>
+              <div className="text-sm text-gray-600">
+                Auto-saved: {formatLastSaved()}
+              </div>
+              {state.hasUnsavedChanges && (
+                <div className="text-sm text-red-600">
+                  • Unsaved changes
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -103,11 +118,7 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
               <button
                 onClick={handleRedo}
                 className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={(() => {
-                  const isDisabled = state.historyIndex >= state.history.length - 1;
-                  console.log('Redo button disabled check:', isDisabled, 'historyIndex:', state.historyIndex, 'history.length:', state.history.length, 'condition:', state.historyIndex, '>=', state.history.length - 1);
-                  return isDisabled;
-                })()}
+                disabled={state.historyIndex >= state.history.length - 1 || state.history.length === 0}
                 title="Redo last undone action"
               >
                 <Redo size={16} />
@@ -118,10 +129,10 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
           
           <button
             onClick={onToggleEditMode}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
+            className={`flex items-center space-x-2 px-4 py-2 border transition-colors ${
               isEditMode
-                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
+                : 'bg-gray-900 text-white hover:bg-gray-800 border-gray-900'
             }`}
           >
             {isEditMode ? (

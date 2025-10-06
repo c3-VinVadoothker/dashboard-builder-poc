@@ -1,8 +1,9 @@
 {
   "dashboard": {
-    "dashboardId": "dashboard-1",
+    "dashboardId": "dashboard-5",
     "ownerId": "user-1",
-    "dashboardName": "Annual Assessment Uniformity Audit",
+    "dashboardName": "Custom Dashboard",
+    "suggestedName": "Critical Equipment Alert Triage Dashboard",
     "layout": [
       [
         "tile-1",
@@ -22,7 +23,7 @@
   "tiles": [
     {
       "tileId": "tile-1",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 0,
       "columnIndex": 0,
       "sizeType": "small",
@@ -36,7 +37,7 @@
     },
     {
       "tileId": "tile-2",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 0,
       "columnIndex": 1,
       "sizeType": "small",
@@ -50,104 +51,35 @@
     },
     {
       "tileId": "tile-3",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 0,
       "columnIndex": 2,
       "sizeType": "small",
-      "tileTitle": "Sales Ratio Analysis",
-      "visualizationFunction": {
-        "type": "bar",
-        "data": {
-          "labels": [
-            "Residential",
-            "Commercial",
-            "Industrial",
-            "Agricultural",
-            "Mixed Use"
-          ],
-          "values": [
-            0.95,
-            0.88,
-            1.02,
-            0.92,
-            0.97
-          ],
-          "colors": [
-            "#10B981",
-            "#3B82F6",
-            "#F59E0B",
-            "#EF4444",
-            "#8B5CF6"
-          ]
-        },
-        "metadata": {
-          "standardLower": 0.9,
-          "standardUpper": 1.1,
-          "unit": ""
-        }
-      },
-      "chatSummary": "Generated Sales Ratio Analysis based on the query: \"Display sales ratio\". This visualization shows property appraisal data with relevant metrics and standards compliance indicators.",
+      "tileTitle": null,
+      "visualizationFunction": null,
+      "chatSummary": null,
       "cacheId": null,
-      "isPopulated": true,
+      "isPopulated": false,
       "isLoading": false,
       "error": null
     },
     {
       "tileId": "tile-4",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 0,
       "columnIndex": 3,
       "sizeType": "small",
-      "tileTitle": "Coefficient of Dispersion by Property Type",
-      "visualizationFunction": {
-        "type": "bar",
-        "data": {
-          "labels": [
-            "Type 1",
-            "Type 2",
-            "Type 3",
-            "Type 4",
-            "Type 5",
-            "Type 6",
-            "Type 7",
-            "Type 8"
-          ],
-          "values": [
-            7.3,
-            8.1,
-            6.8,
-            9.2,
-            7.9,
-            3.2,
-            8.7,
-            11
-          ],
-          "colors": [
-            "#10B981",
-            "#10B981",
-            "#10B981",
-            "#10B981",
-            "#10B981",
-            "#10B981",
-            "#10B981",
-            "#10B981"
-          ]
-        },
-        "metadata": {
-          "standardLower": 6,
-          "standardUpper": 12,
-          "unit": "%"
-        }
-      },
-      "chatSummary": "Generated Coefficient of Dispersion by Property Type based on the query: \"Show COD by property type\". This visualization shows property appraisal data with relevant metrics and standards compliance indicators.",
+      "tileTitle": null,
+      "visualizationFunction": null,
+      "chatSummary": null,
       "cacheId": null,
-      "isPopulated": true,
+      "isPopulated": false,
       "isLoading": false,
       "error": null
     },
     {
       "tileId": "tile-5",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 1,
       "columnIndex": 0,
       "sizeType": "medium",
@@ -161,7 +93,7 @@
     },
     {
       "tileId": "tile-6",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 1,
       "columnIndex": 1,
       "sizeType": "medium",
@@ -175,7 +107,7 @@
     },
     {
       "tileId": "tile-7",
-      "dashboardId": "dashboard-1",
+      "dashboardId": "dashboard-5",
       "rowIndex": 2,
       "columnIndex": 0,
       "sizeType": "large",

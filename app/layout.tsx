@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard Builder POC | C3.ai",
-  description: "Dashboard Builder Proof of Concept for C3.ai",
+  title: "Dashboard Builder Demo | C3.ai",
+  description: "Dashboard Builder Demo for C3.ai",
 };
 
 export default function RootLayout({

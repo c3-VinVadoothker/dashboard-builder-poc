@@ -18,8 +18,22 @@ export function DashboardGrid({ isEditMode, onTileSelect }: DashboardGridProps) 
   const [dragOverRow, setDragOverRow] = useState<number | null>(null);
   const [clickedTile, setClickedTile] = useState<string | null>(null);
 
+  // Don't render until tiles are loaded
+  if (!state.tiles) {
+    return (
+      <div className="p-6 space-y-6 pb-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Group tiles by row
-  const tilesByRow = state.tiles.reduce((acc, tile) => {
+  const tilesByRow = (state.tiles || []).reduce((acc, tile) => {
     if (!acc[tile.rowIndex]) {
       acc[tile.rowIndex] = [];
     }
@@ -162,7 +176,7 @@ export function DashboardGrid({ isEditMode, onTileSelect }: DashboardGridProps) 
   };
 
   return (
-    <div className="p-4 space-y-8 pb-8">
+    <div className="p-6 space-y-6 pb-6">
 
       {Object.keys(tilesByRow).map(rowIndex => {
         const rowTiles = tilesByRow[parseInt(rowIndex)];
@@ -175,14 +189,14 @@ export function DashboardGrid({ isEditMode, onTileSelect }: DashboardGridProps) 
             key={rowKey}
             className={`relative group transition-all duration-200 ${
               isRowDragging ? 'opacity-50 scale-95' : ''
-            } ${isRowDragOver ? 'bg-blue-50 rounded-lg p-2 border-2 border-blue-300 shadow-lg' : ''}`}
+            } ${isRowDragOver ? 'bg-gray-50 p-2 border-2 border-gray-400 shadow-lg' : ''}`}
             onDragOver={(e) => handleRowDragOver(e, parseInt(rowIndex))}
             onDrop={(e) => handleRowDrop(e, parseInt(rowIndex))}
           >
             {/* Enhanced Row Drop Zone Indicator */}
             {isEditMode && draggedRow !== null && draggedRow !== parseInt(rowIndex) && (
               <div
-                className={`absolute inset-0 border-2 border-dashed border-blue-400 bg-blue-50 bg-opacity-30 rounded-lg pointer-events-none z-5 transition-all duration-150 ${
+                className={`absolute inset-0 border-2 border-dashed border-gray-500 bg-gray-100 bg-opacity-30 pointer-events-none z-5 transition-all duration-150 ${
                   isRowDragOver ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
                 }`}
               />
@@ -202,7 +216,7 @@ export function DashboardGrid({ isEditMode, onTileSelect }: DashboardGridProps) 
             )}
             
             <div
-              className={`grid gap-3 transition-all ${
+              className={`grid gap-4 transition-all ${
                 isRowDragging ? 'opacity-50' : ''
               }`}
               style={{

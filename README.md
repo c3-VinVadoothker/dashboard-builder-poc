@@ -1,159 +1,246 @@
-# C3.ai Dashboard Builder
+# Dashboard Builder POC | C3.ai
 
-A dynamic, interactive dashboard builder with AI-powered visualization creation, built with Next.js, TypeScript, and Tailwind CSS.
+A proof-of-concept dashboard builder application that allows users to create, edit, and manage interactive data visualizations through a chat-based interface.
 
-## Features
+## 🚀 Features
 
-### 🎨 Design & Theming
-- **Modern UI**: Clean, minimalist design matching Figma specifications
-- **Color Scheme**: Teal/turquoise primary colors with vibrant blue highlights and orange/red accents
-- **Responsive Layout**: Dynamic resizing when chat panel opens/closes
-- **Thin Sidebar**: Icon-only navigation with hover tooltips
+- **Interactive Dashboard Creation**: Drag-and-drop interface for building dashboards
+- **AI-Powered Visualizations**: Chat-based interface for creating data visualizations
+- **Real-time Editing**: Live preview and editing capabilities
+- **Undo/Redo System**: Full history management for all changes
+- **Responsive Design**: Works on desktop and mobile devices
+- **Multiple Chart Types**: Bar charts, line charts, maps, and more
+- **View/Edit Modes**: Toggle between presentation and editing modes
 
-### 📊 Dynamic Dashboard
-- **4-2-1 Layout**: Initial layout with 4 small tiles, 2 medium tiles, and 1 large tile
-- **Dynamic Tiles**: All tiles are fully dynamic and resizable
-- **Drag & Drop**: Move tiles between sections and reorder entire rows
-- **Cross-Section Movement**: Tiles automatically resize when moved to different sections
+## 🛠️ Tech Stack
 
-### 🤖 AI Assistant Integration
-- **Chat Panel**: Right-side chat interface for creating visualizations
-- **Tile Interaction Banner**: Subtle green banner showing which tile is being interacted with
-- **Suggested Queries**: Auto-generated query suggestions for quick visualization creation
-- **Loading States**: Real-time feedback during visualization generation
-- **Error Handling**: Graceful error states with retry options
+- **Frontend**: Next.js 15, React 18, TypeScript
+- **Styling**: Tailwind CSS, Lucide React Icons
+- **State Management**: React Context API with useReducer
+- **Charts**: Custom chart components with D3.js
+- **Build Tool**: Turbopack (Next.js)
 
-### 🔄 State Management
-- **Persistent Data**: All data stored in JSON file with automatic saving
-- **History Tracking**: Undo functionality for all actions
-- **Auto-save**: Automatic saving with status indicators
-- **Unsaved Changes**: Visual indicators for unsaved changes
+## 📁 Project Structure
 
-### 🎯 Edit & View Modes
-- **Edit Mode**: Full interactivity with drag & drop, chat, and tile editing
-- **View Mode**: Read-only mode with disabled interactions
-- **Mode Toggle**: Easy switching between edit and view modes
+```
+dashboard-builder-poc/
+├── app/                          # Next.js App Router
+│   ├── api/                      # API Routes
+│   │   ├── dashboard/            # Dashboard CRUD operations
+│   │   └── visualization/        # Visualization generation
+│   ├── globals.css               # Global styles
+│   ├── layout.tsx                # Root layout
+│   └── page.tsx                  # Main dashboard page
+├── components/                   # React components
+│   ├── dashboard/                # Dashboard-specific components
+│   │   ├── chart.tsx            # Chart rendering component
+│   │   ├── chat-panel.tsx       # AI chat interface
+│   │   ├── grid.tsx             # Dashboard grid layout
+│   │   ├── header.tsx           # Dashboard header
+│   │   ├── sidebar.tsx          # Navigation sidebar
+│   │   └── tile.tsx             # Individual dashboard tiles
+│   └── ui/                      # Reusable UI components
+├── contexts/                     # React contexts
+│   └── dashboard-context.tsx    # Main dashboard state management
+├── data/                        # Static data and configurations
+│   └── dashboard.json           # Initial dashboard data
+├── hooks/                       # Custom React hooks
+│   └── use-mobile.ts           # Mobile detection hook
+└── lib/                         # Utility functions
+    └── utils.ts                 # Common utilities
+```
 
-### 📱 Interactive Features
-- **Row Dragging**: Drag entire rows using the left-side grip handle
-- **Tile Dragging**: Drag individual tiles between empty slots
-- **Chart/Grid Toggle**: Switch between chart and data grid views
-- **Tile Actions**: Refresh, info, and clear tile functionality
-
-### ⚠️ Warning & Error States
-- **Loading Indicators**: Spinning loaders during visualization creation
-- **Error Messages**: Clear error states with retry options
-- **Warning Modals**: Confirmation dialogs for destructive actions
-- **Progress Feedback**: Real-time status updates
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ 
 - pnpm (recommended) or npm
 
 ### Installation
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd dashboard-builder-poc
-```
+1. **Clone the repository**
+   ```bash
+   git clone {URL}
+   cd dashboard-builder-poc
+   ```
 
-2. Install dependencies:
-```bash
-pnpm install
-```
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
 
-3. Start the development server:
-```bash
-pnpm dev
-```
+3. **Start the development server**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Usage
+## 🎯 How to Use
 
 ### Creating Visualizations
-1. Click the "Edit" button to enter edit mode
-2. Click on any empty tile to open the AI assistant
-3. Type a query or use the suggested queries
-4. Wait for the visualization to be generated
-5. The tile will automatically populate with the chart
 
-### Managing Tiles
-- **Move Tiles**: Drag populated tiles to empty slots
-- **Reorder Rows**: Use the left grip handle to drag entire rows
-- **Clear Tiles**: Use the trash icon to clear tile content
-- **Toggle Views**: Switch between chart and grid views
+1. **Enter Edit Mode**: Click the "Edit" button in the header
+2. **Select a Tile**: Click on any empty tile to open the chat panel
+3. **Request a Visualization**: Type natural language requests like:
+   - "Show me the Coefficient of Dispersion by property type"
+   - "Create a map visualization of sales ratios"
+   - "Display Price-Related Differential analysis"
+4. **View Results**: The visualization will appear in the selected tile
 
-### Using the Chat Assistant
-- **Ask Questions**: Type natural language queries
-- **Use Suggestions**: Click on suggested queries for quick results
-- **Undo Actions**: Use the undo button to revert changes
-- **View Mode**: Chat is disabled in view mode for read-only access
+### Managing Dashboards
 
-### Data Persistence
-- All changes are automatically saved to `data/dashboard.json`
-- Auto-save status is shown in the header
-- Unsaved changes are indicated with an orange dot
+- **Drag & Drop**: Reorder tiles by dragging them
+- **Row Reordering**: Hover over rows and drag the handle to reorder
+- **Undo/Redo**: Use the undo/redo buttons in the header
+- **View Mode**: Switch to view mode for presentation
 
-## Project Structure
+### Supported Queries
 
+The AI assistant supports various types of data visualization requests:
+
+- **Property Analysis**: COD, PRD, sales ratios
+- **Geographic Data**: Maps with location-based data
+- **Time Series**: Trends over time
+- **Comparative Analysis**: Multi-property comparisons
+
+## 🔧 Development
+
+### Key Files to Understand
+
+#### State Management
+- `contexts/dashboard-context.tsx`: Main state management with undo/redo functionality
+- `components/dashboard/grid.tsx`: Grid layout and drag-and-drop logic
+- `components/dashboard/chat-panel.tsx`: AI chat interface
+
+#### Visualization System
+- `components/dashboard/chart.tsx`: Chart rendering component
+- `app/api/visualization/route.ts`: API for generating visualizations
+- `components/dashboard/tile.tsx`: Individual tile component
+
+#### UI Components
+- `components/dashboard/header.tsx`: Header with edit/view toggle
+- `components/dashboard/sidebar.tsx`: Navigation sidebar
+- `components/ui/`: Reusable UI components
+
+### Adding New Features
+
+#### Adding a New Chart Type
+
+1. **Update API Route** (`app/api/visualization/route.ts`):
+   ```typescript
+   'new-chart-type': {
+     title: 'New Chart Title',
+     type: 'new-type',
+     data: { /* chart data */ },
+     metadata: { /* chart metadata */ }
+   }
+   ```
+
+2. **Update Chart Component** (`components/dashboard/chart.tsx`):
+   ```typescript
+   case 'new-type':
+     return <NewChartComponent data={data} metadata={metadata} />;
+   ```
+
+#### Adding New Query Types
+
+1. **Update Query Detection** (`app/api/visualization/route.ts`):
+   ```typescript
+   if (query.toLowerCase().includes('new-query-type')) {
+     visualizationType = 'new-chart-type';
+   }
+   ```
+
+### Code Style
+
+- **TypeScript**: Strict typing throughout
+- **Components**: Functional components with hooks
+- **State**: Context API with useReducer for complex state
+- **Styling**: Tailwind CSS classes
+- **Icons**: Lucide React icons
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+
+- [ ] Create visualizations through chat
+- [ ] Drag and drop tiles
+- [ ] Reorder rows
+- [ ] Undo/redo functionality
+- [ ] Switch between edit/view modes
+- [ ] Responsive design on mobile
+- [ ] Error handling for failed requests
+
+### Development Testing
+
+```bash
+# Run type checking
+pnpm type-check
+
+# Run linting
+pnpm lint
+
+# Build for production
+pnpm build
 ```
-dashboard-builder-poc/
-├── app/                    # Next.js app directory
-│   ├── api/               # API routes
-│   ├── globals.css        # Global styles and theming
-│   └── page.tsx           # Main dashboard page
-├── components/            # React components
-│   └── dashboard/         # Dashboard-specific components
-├── contexts/              # React contexts
-├── data/                  # Data storage
-├── hooks/                 # Custom React hooks
-└── lib/                   # Utility functions
+
+## 🚀 Deployment
+
+### Production Build
+
+```bash
+# Build the application
+pnpm build
+
+# Start production server
+pnpm start
 ```
 
-## API Endpoints
+### Environment Variables
 
-- `GET /api/dashboard` - Load dashboard data
-- `PUT /api/dashboard` - Save dashboard data
-- `POST /api/visualization` - Generate visualizations
+Create a `.env.local` file for local development:
 
-## Technologies Used
+```env
+# Add any environment variables here
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
-- **Next.js 15** - React framework
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **Radix UI** - UI components
-- **Recharts** - Chart library
-- **Lucide React** - Icons
+### Common Issues
 
-## Development
+**Build Errors**
+- Ensure Node.js version is 18+
+- Clear node_modules and reinstall: `rm -rf node_modules && pnpm install`
 
-### Key Features Implementation
+**Visualization Not Loading**
+- Check browser console for errors
+- Verify API routes are working
+- Check network tab for failed requests
 
-1. **Dynamic Resizing**: Main content area resizes when chat panel opens/closes
-2. **Drag & Drop**: Implemented with HTML5 drag and drop API
-3. **State Management**: Custom React context with reducer pattern
-4. **Data Persistence**: File-based storage with automatic saving
-5. **Error Handling**: Comprehensive error states and recovery options
+**Undo/Redo Not Working**
+- Ensure you're in edit mode
+- Check that actions are being saved to history
+- Verify state management is working correctly
 
-### Customization
+### Getting Help
 
-- **Colors**: Update CSS variables in `app/globals.css`
-- **Layout**: Modify the initial layout in `contexts/dashboard-context.tsx`
-- **Visualizations**: Add new chart types in `components/dashboard/chart.tsx`
-- **API**: Extend visualization generation in `app/api/visualization/route.ts`
+- Check the browser console for error messages
+- Review the network tab for API failures
+- Examine the React DevTools for state issues
 
-## Contributing
+## 📊 Performance
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+- **Bundle Size**: Optimized with Next.js and Turbopack
+- **Loading**: Lazy loading for chart components
+- **State**: Efficient state management with Context API
+- **Rendering**: Optimized re-renders with React.memo where needed
 
-## License
+---
 
-This project is licensed under the MIT License.
+

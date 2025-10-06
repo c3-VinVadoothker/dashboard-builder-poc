@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, GripVertical, Trash2, RefreshCw, Info, BarChart3, Table, AlertCircle, Loader2 } from "lucide-react";
 import { useDashboard } from "@/contexts/dashboard-context";
 import { Tile } from "@/contexts/dashboard-context";
-import { Chart } from "./chart";
+import { ChartFactory } from "../charts/chart-factory";
 
 interface DashboardTileProps {
   tile: Tile;
@@ -48,15 +48,15 @@ export function DashboardTile({
   if (!tile.isPopulated) {
     return (
       <div
-        className={`relative rounded-lg p-4 flex flex-col items-center justify-center transition-all ${
+        className={`relative border p-4 flex flex-col items-center justify-center transition-all ${
           isEditMode 
-            ? 'bg-white border-2 border-dashed border-gray-300 cursor-pointer hover:border-blue-400 hover:bg-blue-50' 
-            : 'bg-gray-100 border border-gray-200'
+            ? 'bg-white border-2 border-dashed border-gray-400 cursor-pointer hover:border-gray-600 hover:bg-gray-50' 
+            : 'bg-gray-100 border border-gray-300'
         } ${
-          isDragOver ? 'border-blue-500 bg-blue-100' : ''
+          isDragOver ? 'border-gray-600 bg-gray-100' : ''
         } ${
-          state.selectedTileId === tile.tileId ? 'border-2 border-solid border-green-500 bg-green-50' : ''
-        } ${isClicked ? 'ring-2 ring-blue-500 ring-opacity-75 scale-105' : ''}`}
+          state.selectedTileId === tile.tileId ? 'border-2 border-solid border-gray-600 bg-gray-50' : ''
+        } ${isClicked ? 'ring-2 ring-gray-500 ring-opacity-75 scale-105' : ''}`}
         onClick={isEditMode ? onSelect : undefined}
         style={{
           height: tile.sizeType === 'small' ? '160px' :
@@ -83,14 +83,14 @@ export function DashboardTile({
   // Loading state
   if (tile.isLoading) {
     return (
-      <div className={`relative border border-gray-200 rounded-lg overflow-hidden ${
+      <div className={`relative border border-gray-300 overflow-hidden ${
         isEditMode ? 'bg-white' : 'bg-gray-100'
       } ${
-        state.selectedTileId === tile.tileId ? 'border-2 border-solid border-green-500 bg-green-50' : ''
+        state.selectedTileId === tile.tileId ? 'border-2 border-solid border-gray-600 bg-gray-50' : ''
       }`}>
-        <div className="flex items-center justify-between p-2 border-b border-gray-100">
+        <div className="flex items-center justify-between p-2 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <h3 className="text-sm font-medium text-gray-900 truncate">
+            <h3 className="text-sm font-semibold text-gray-900 truncate">
               {tile.tileTitle || 'Loading...'}
             </h3>
           </div>
@@ -108,14 +108,14 @@ export function DashboardTile({
   // Error state
   if (tile.error) {
     return (
-      <div className={`relative border border-red-200 rounded-lg overflow-hidden ${
+      <div className={`relative border border-red-300 overflow-hidden ${
         isEditMode ? 'bg-white' : 'bg-gray-100'
       } ${
-        state.selectedTileId === tile.tileId ? 'border-2 border-solid border-green-500 bg-green-50' : ''
+        state.selectedTileId === tile.tileId ? 'border-2 border-solid border-gray-600 bg-gray-50' : ''
       }`}>
-        <div className="flex items-center justify-between p-2 border-b border-gray-100">
+        <div className="flex items-center justify-between p-2 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <h3 className="text-sm font-medium text-gray-900 truncate">
+            <h3 className="text-sm font-semibold text-gray-900 truncate">
               {tile.tileTitle || 'Error'}
             </h3>
           </div>
@@ -157,7 +157,7 @@ export function DashboardTile({
         {/* View Toggle */}
         <button
           onClick={handleViewToggle}
-          className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white rounded border border-gray-200 shadow-sm"
+          className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white border border-gray-300"
           title={`Switch to ${viewMode === 'chart' ? 'grid' : 'chart'} view`}
         >
           {viewMode === 'chart' ? <Table size={14} /> : <BarChart3 size={14} />}
@@ -167,7 +167,7 @@ export function DashboardTile({
         {tile.chatSummary && (
           <button
             onClick={handleShowInfo}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white rounded border border-gray-200 shadow-sm"
+            className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white border border-gray-300"
             title="Show visualization info"
           >
             <Info size={14} />
@@ -177,7 +177,7 @@ export function DashboardTile({
         {/* Refresh Button */}
         <button
           onClick={handleRefresh}
-          className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white rounded border border-gray-200 shadow-sm"
+          className="p-1 text-gray-400 hover:text-gray-600 transition-colors bg-white border border-gray-300"
           title="Refresh data"
         >
           <RefreshCw size={14} />
@@ -198,7 +198,7 @@ export function DashboardTile({
       {/* Tile Drag Handle - Above the tile on the left */}
       {isEditMode && tile.isPopulated && (
         <div className="absolute top-1 left-2 z-10">
-          <div className="w-6 h-6 bg-gray-100 rounded border border-gray-300 flex items-center justify-center cursor-move opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200 shadow-sm">
+          <div className="w-6 h-6 bg-gray-100 border border-gray-400 flex items-center justify-center cursor-move opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200">
             <GripVertical size={12} className="text-gray-500" />
           </div>
         </div>
@@ -206,18 +206,18 @@ export function DashboardTile({
 
       {/* The actual tile */}
       <div
-        className={`border border-gray-200 rounded-lg overflow-hidden transition-all ${
+        className={`border border-gray-300 overflow-hidden transition-all ${
           isEditMode ? 'bg-white' : 'bg-gray-100'
         } ${
           isDragging ? 'opacity-50 scale-95 shadow-lg' : ''
-        } ${isDragOver ? 'border-blue-500 bg-blue-50' : ''} ${
-          state.selectedTileId === tile.tileId ? 'border-2 border-solid border-green-500 bg-green-50' : ''
-        } ${isClicked ? 'ring-2 ring-blue-500 ring-opacity-75 scale-105' : ''}`}
+        } ${isDragOver ? 'border-gray-600 bg-gray-100' : ''} ${
+          state.selectedTileId === tile.tileId ? 'border-2 border-solid border-gray-600 bg-gray-50' : ''
+        } ${isClicked ? 'ring-2 ring-gray-500 ring-opacity-75 scale-105' : ''}`}
       >
         {/* Compact Tile Header */}
-        <div className="flex items-center justify-between p-2 border-b border-gray-100">
+        <div className="flex items-center justify-between p-2 border-b border-gray-200">
           <div className="flex items-center space-x-2 flex-1 min-w-0">
-            <h3 className="text-sm font-medium text-gray-900 truncate">
+            <h3 className="text-sm font-semibold text-gray-900 truncate">
               {tile.tileTitle || 'Untitled Visualization'}
             </h3>
           </div>
@@ -236,7 +236,7 @@ export function DashboardTile({
           {viewMode === 'chart' ? (
             tile.visualizationFunction ? (
               <div className="w-full h-full overflow-hidden">
-                <Chart
+                <ChartFactory
                   type={tile.visualizationFunction.type}
                   data={tile.visualizationFunction.data}
                   metadata={tile.visualizationFunction.metadata}

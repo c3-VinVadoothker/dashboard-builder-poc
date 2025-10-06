@@ -22,6 +22,7 @@ export interface Dashboard {
   dashboardId: string;
   ownerId: string;
   dashboardName: string;
+  suggestedName?: string;
   layout: string[][];
 }
 
@@ -40,27 +41,12 @@ interface DashboardState {
   hasUnsavedChanges: boolean;
 }
 
-// Initial state with 4,2,1 layout
-const initialDashboard: Dashboard = {
-  dashboardId: 'dashboard-1',
-  ownerId: 'user-1',
-  dashboardName: 'Annual Assessment Uniformity Audit',
-  layout: [
-    ['tile-1', 'tile-2', 'tile-3', 'tile-4'],
-    ['tile-5', 'tile-6'],
-    ['tile-7']
-  ]
-};
+// Import demo data
+import { demoData, scenarios } from '@/data/demo-data';
 
-const initialTiles: Tile[] = [
-  { tileId: 'tile-1', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 0, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-2', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 1, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-3', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 2, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-4', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 3, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-5', dashboardId: 'dashboard-1', rowIndex: 1, columnIndex: 0, sizeType: 'medium', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-6', dashboardId: 'dashboard-1', rowIndex: 1, columnIndex: 1, sizeType: 'medium', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-  { tileId: 'tile-7', dashboardId: 'dashboard-1', rowIndex: 2, columnIndex: 0, sizeType: 'large', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-];
+// Initial state with 4,2,1 layout from demo data
+const initialDashboard: Dashboard = demoData.dashboard;
+const initialTiles: Tile[] = demoData.defaultTiles;
 
 const initialState: DashboardState = {
   dashboard: initialDashboard,
@@ -227,47 +213,27 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
       };
     
     case 'UNDO':
-      console.log('UNDO action - Current index:', state.historyIndex, 'History length:', state.history.length);
       if (state.historyIndex > 0) {
         const newHistoryIndex = state.historyIndex - 1;
-        console.log('Undoing to index:', newHistoryIndex);
         const restoredState = { 
           ...state.history[newHistoryIndex], 
           history: state.history,  // Preserve the history array
           historyIndex: newHistoryIndex 
         };
-        console.log('Restored state tiles:', restoredState.tiles.map(t => ({ 
-          tileId: t.tileId, 
-          isPopulated: t.isPopulated, 
-          tileTitle: t.tileTitle,
-          hasVisualization: !!t.visualizationFunction,
-          visualizationType: t.visualizationFunction?.type
-        })));
         return restoredState;
       }
-      console.log('Undo failed - no previous states available');
       return state;
     
     case 'REDO':
-      console.log('REDO action - Current index:', state.historyIndex, 'History length:', state.history.length);
       if (state.historyIndex < state.history.length - 1) {
         const newHistoryIndex = state.historyIndex + 1;
-        console.log('Redoing to index:', newHistoryIndex);
         const restoredState = { 
           ...state.history[newHistoryIndex], 
           history: state.history,  // Preserve the history array
           historyIndex: newHistoryIndex 
         };
-        console.log('Restored state tiles:', restoredState.tiles.map(t => ({ 
-          tileId: t.tileId, 
-          isPopulated: t.isPopulated, 
-          tileTitle: t.tileTitle,
-          hasVisualization: !!t.visualizationFunction,
-          visualizationType: t.visualizationFunction?.type
-        })));
         return restoredState;
       }
-      console.log('Redo failed - no future states available');
       return state;
     
     case 'SET_PROCESSING':
@@ -294,8 +260,6 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
       };
     
     case 'SAVE_STATE':
-      console.log('SAVE_STATE - Current index:', state.historyIndex, 'History length:', state.history.length);
-      
       // Create a clean state object without history arrays to avoid circular references
       const cleanState: Omit<DashboardState, 'history' | 'historyIndex'> = {
         dashboard: state.dashboard,
@@ -309,7 +273,6 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
       
       // If this is the first save, initialize history properly
       if (state.history.length === 0) {
-        console.log('First save - initializing history');
         return {
           ...state,
           history: [cleanState],
@@ -319,14 +282,6 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
       
       // If we're in the middle of history (after undo), truncate future states
       const newHistory = [...state.history.slice(0, state.historyIndex + 1), cleanState];
-      console.log('Saving state - new history length:', newHistory.length, 'new index:', newHistory.length - 1);
-      console.log('Saving tiles:', cleanState.tiles.map(t => ({ 
-        tileId: t.tileId, 
-        isPopulated: t.isPopulated, 
-        tileTitle: t.tileTitle,
-        hasVisualization: !!t.visualizationFunction,
-        visualizationType: t.visualizationFunction?.type
-      })));
       return {
         ...state,
         history: newHistory,
@@ -357,10 +312,11 @@ const DashboardContext = createContext<{
   dispatch: React.Dispatch<DashboardAction>;
   saveStateBeforeChange: (action: DashboardAction) => void;
   saveStateAfterChange: (action: DashboardAction) => void;
+  demoData: any;
 } | undefined>(undefined);
 
 // Provider
-export function DashboardProvider({ children }: { children: React.ReactNode }) {
+export function DashboardProvider({ children, demoData }: { children: React.ReactNode; demoData?: any }) {
   const [state, dispatch] = useReducer(dashboardReducer, initialState);
 
   // Helper function to save state before making changes
@@ -379,30 +335,27 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => dispatch({ type: 'SAVE_STATE' }), 0);
   };
 
-  // Load state from API on mount
+  // Load demo data when demoData changes
   useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const response = await fetch('/api/dashboard');
-        const data = await response.json();
-        
-        // Update the state with the loaded data
-        if (data.dashboard && data.tiles) {
-          dispatch({ 
-            type: 'LOAD_DASHBOARD', 
-            payload: { 
-              dashboard: data.dashboard, 
-              tiles: data.tiles 
-            } 
-          });
-        }
-      } catch (error) {
-        console.error('Failed to load dashboard from API:', error);
-      }
-    };
-
-    loadDashboard();
-  }, []);
+    if (demoData) {
+      dispatch({ 
+        type: 'LOAD_DASHBOARD', 
+        payload: { 
+          dashboard: demoData.dashboard, 
+          tiles: demoData.defaultTiles 
+        } 
+      });
+    } else {
+      // Default to property appraisal data
+      dispatch({ 
+        type: 'LOAD_DASHBOARD', 
+        payload: { 
+          dashboard: demoData.dashboard, 
+          tiles: demoData.defaultTiles 
+        } 
+      });
+    }
+  }, [demoData]);
 
   // Save state to API when it changes
   useEffect(() => {
@@ -431,7 +384,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   }, [state.dashboard, state.tiles]);
 
   return (
-    <DashboardContext.Provider value={{ state, dispatch, saveStateBeforeChange, saveStateAfterChange }}>
+    <DashboardContext.Provider value={{ state, dispatch, saveStateBeforeChange, saveStateAfterChange, demoData: demoData || demoData }}>
       {children}
     </DashboardContext.Provider>
   );

@@ -17,48 +17,52 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-const SUGGESTED_QUERIES = {
-  small: [
-    "Show COD by property type",
-    "Display sales ratio",
-    "Show PRD analysis"
-  ],
-  medium: [
-    "Show me the Coefficient of Dispersion by property type for all sales in the last 12 months",
-    "Create a map visualization of sales ratios by neighborhood",
-    "Display Price-Related Differential analysis for residential properties"
-  ],
-  large: [
-    "Show me the Coefficient of Dispersion by property type for all sales in the last 12 months",
-    "Create a map visualization of sales ratios by neighborhood",
-    "Display Price-Related Differential analysis for residential properties",
-    "Generate a bar chart of appraisal accuracy metrics",
-    "Show property value trends over time"
-  ]
-};
-
 export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
-  const { state, dispatch, saveStateBeforeChange, saveStateAfterChange } = useDashboard();
+  const { state, dispatch, saveStateBeforeChange, saveStateAfterChange, demoData } = useDashboard();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
-
   const tile = state.tiles.find(t => t.tileId === tileId);
+
+  // Function to get single query
+  const getSingleQuery = () => {
+    if (!demoData || !demoData.singleQuery) return null;
+    return demoData.singleQuery;
+  };
 
   // Function to get suggestions based on tile size
   const getSuggestions = () => {
-    if (!tile) return SUGGESTED_QUERIES.medium;
+    if (!tile || !demoData) return [];
     
     switch (tile.sizeType) {
       case 'small':
-        return SUGGESTED_QUERIES.small;
+        return demoData.suggestedQueries.small || [];
       case 'medium':
-        return SUGGESTED_QUERIES.medium;
+        return demoData.suggestedQueries.medium || [];
       case 'large':
-        return SUGGESTED_QUERIES.large;
+        return demoData.suggestedQueries.large || [];
       default:
-        return SUGGESTED_QUERIES.medium;
+        return demoData.suggestedQueries.medium || [];
+    }
+  };
+
+  // Initialize input value with placeholder text
+  useEffect(() => {
+    if (!inputValue) {
+      setInputValue("Type Input Here");
+    }
+  }, []);
+
+  // Function to toggle the single query
+  const toggleQuery = () => {
+    const singleQuery = getSingleQuery();
+    if (singleQuery) {
+      if (inputValue === "Type Input Here") {
+        setInputValue(singleQuery);
+      } else {
+        setInputValue("Type Input Here");
+      }
     }
   };
 
@@ -69,7 +73,7 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
     }
   }, [isEditMode, messages.length]);
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (content: string, visualizationType?: string) => {
     if (!content.trim() || !isEditMode) return;
 
     const userMessage: ChatMessage = {
@@ -87,6 +91,28 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
     saveStateBeforeChange({ type: 'SET_TILE_LOADING', payload: { tileId, isLoading: true } });
 
     try {
+      // Determine demo type from dashboard ID
+      let demoType = 'property-appraisal'; // default
+      if (demoData && demoData.dashboard) {
+        switch (demoData.dashboard.dashboardId) {
+          case 'dashboard-1':
+            demoType = 'property-appraisal';
+            break;
+          case 'dashboard-2':
+            demoType = 'retail-analytics';
+            break;
+          case 'dashboard-3':
+            demoType = 'healthcare-metrics';
+            break;
+          case 'dashboard-4':
+            demoType = 'financial-risk';
+            break;
+          case 'dashboard-5':
+            demoType = 'c3-ai-reliability';
+            break;
+        }
+      }
+
       // Call the visualization API
       const response = await fetch('/api/visualization', {
         method: 'POST',
@@ -95,7 +121,9 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
         },
         body: JSON.stringify({
           query: content,
-          tileId
+          tileId,
+          visualizationType,
+          demoType
         })
       });
 
@@ -105,18 +133,13 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
         const assistantMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'assistant',
-          content: `Done. The chart now shows ${result.visualization.title.toLowerCase()}.`,
+          content: result.visualization.assistantMessage || `Done. The chart now shows ${result.visualization.title.toLowerCase()}.`,
           timestamp: new Date()
         };
 
         setMessages(prev => [...prev, assistantMessage]);
 
         // Populate the tile with the visualization data
-        console.log('Creating visualization for tile:', tileId, 'with data:', {
-          title: result.visualization.title,
-          type: result.visualization.type,
-          summary: result.visualization.summary
-        });
         saveStateAfterChange({
           type: 'POPULATE_TILE',
           payload: {
@@ -172,19 +195,19 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
   };
 
   return (
-    <div className="fixed right-0 top-0 h-full w-80 bg-white border-l border-gray-200 flex flex-col z-50">
+    <div className="fixed right-0 top-0 h-full w-80 bg-white border-l border-gray-300 flex flex-col z-50">
       {/* Tile Interaction Banner */}
-      <div className="bg-green-50 border-b border-green-200 p-3">
+      <div className="bg-gray-50 border-b border-gray-300 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-sm font-medium text-green-800">
+            <div className="w-2 h-2 bg-gray-600"></div>
+            <span className="text-sm font-medium text-gray-800">
               {tile?.tileTitle || (tile?.sizeType ? `${tile.sizeType.charAt(0).toUpperCase() + tile.sizeType.slice(1)} tile` : 'Tile')}
             </span>
           </div>
           <button
             onClick={handleClose}
-            className="p-1 text-green-600 hover:text-green-800 transition-colors"
+            className="p-1 text-gray-600 hover:text-gray-800 transition-colors"
           >
             <X size={16} />
           </button>
@@ -192,10 +215,10 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-300">
         <div className="flex items-center space-x-2">
-          <MessageCircle size={20} className="text-blue-600" />
-          <h3 className="font-medium text-gray-900">C3 AI Assistant</h3>
+          <MessageCircle size={20} className="text-gray-700" />
+          <h3 className="font-semibold text-gray-900">C3 AI Assistant</h3>
         </div>
         <div className="flex items-center space-x-2">
           {/* Undo/Redo buttons removed - they exist elsewhere in the interface */}
@@ -220,9 +243,9 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                className={`max-w-xs px-3 py-2 text-sm ${
                   message.type === 'user'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-gray-800 text-white'
                     : 'bg-gray-100 text-gray-900'
                 }`}
               >
@@ -234,9 +257,9 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 text-gray-900 px-3 py-2 rounded-lg text-sm">
+            <div className="bg-gray-100 text-gray-900 px-3 py-2 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                <div className="animate-spin h-4 w-4 border-b-2 border-gray-600"></div>
                 <span>Generating visualization...</span>
               </div>
             </div>
@@ -246,43 +269,52 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
 
       {/* Suggestion Cards - Above Input */}
       {isEditMode && (
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-300">
           <div className="grid gap-2">
-            {getSuggestions().map((query: string, index: number) => (
-              <button
-                key={index}
-                onClick={() => handleSendMessage(query)}
-                disabled={isLoading}
-                className="w-full p-2 text-left bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <div className="flex items-start space-x-2">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-1.5 flex-shrink-0"></div>
-                  <span className="text-xs text-gray-700 leading-relaxed">
-                    {query}
-                  </span>
-                </div>
-              </button>
-            ))}
+            {getSuggestions().map((suggestion: any, index: number) => {
+              const query = typeof suggestion === 'string' ? suggestion : suggestion.query;
+              const visualizationType = typeof suggestion === 'string' ? undefined : suggestion.visualizationType;
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleSendMessage(query, visualizationType)}
+                  disabled={isLoading}
+                  className="w-full p-2 text-left bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="flex items-start space-x-2">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                    <span className="text-xs text-gray-700 leading-relaxed">
+                      {query}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Input Section - At Bottom */}
-      <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-300">
         <div className="flex space-x-2">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputValue)}
-            placeholder={isEditMode ? "Ask any follow up question" : "Chat disabled in view mode"}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading || !isEditMode}
-          />
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={inputValue}
+              onClick={isEditMode ? toggleQuery : undefined}
+              onKeyPress={(e) => e.key === 'Enter' && inputValue !== "Type Input Here" && handleSendMessage(inputValue)}
+              className={`w-full px-3 py-2 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
+                inputValue === "Type Input Here" ? "text-gray-400" : "text-gray-900"
+              }`}
+              disabled={isLoading || !isEditMode}
+              readOnly
+            />
+          </div>
           <button
             onClick={() => handleSendMessage(inputValue)}
-            disabled={isLoading || !inputValue.trim() || !isEditMode}
-            className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading || !inputValue.trim() || !isEditMode || inputValue === "Type Input Here"}
+            className="px-3 py-2 bg-gray-800 text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send size={16} />
           </button>
@@ -292,10 +324,10 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
       {/* Warning Modal */}
       {showWarning && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+          <div className="bg-white border border-gray-300 p-6 max-w-sm mx-4">
             <div className="flex items-center space-x-2 mb-4">
               <AlertTriangle size={20} className="text-orange-500" />
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-semibold text-gray-900">
                 Visualization in Progress
               </h3>
             </div>
@@ -305,7 +337,7 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowWarning(false)}
-                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 Continue
               </button>
@@ -314,7 +346,7 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
                   setShowWarning(false);
                   onClose();
                 }}
-                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors"
               >
                 Close Anyway
               </button>

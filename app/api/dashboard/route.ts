@@ -21,27 +21,11 @@ async function readDashboard() {
     const data = await fs.readFile(DASHBOARD_FILE, 'utf-8');
     return JSON.parse(data);
   } catch {
-    // Return default dashboard if file doesn't exist
+    // Return default dashboard from demo data if file doesn't exist
+    const { demoData } = await import('@/data/demo-data');
     return {
-      dashboard: {
-        dashboardId: 'dashboard-1',
-        ownerId: 'user-1',
-        dashboardName: 'Annual Assessment Uniformity Audit',
-        layout: [
-          ['tile-1', 'tile-2', 'tile-3', 'tile-4'],
-          ['tile-5', 'tile-6'],
-          ['tile-7']
-        ]
-      },
-      tiles: [
-        { tileId: 'tile-1', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 0, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-2', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 1, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-3', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 2, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-4', dashboardId: 'dashboard-1', rowIndex: 0, columnIndex: 3, sizeType: 'small', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-5', dashboardId: 'dashboard-1', rowIndex: 1, columnIndex: 0, sizeType: 'medium', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-6', dashboardId: 'dashboard-1', rowIndex: 1, columnIndex: 1, sizeType: 'medium', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-        { tileId: 'tile-7', dashboardId: 'dashboard-1', rowIndex: 2, columnIndex: 0, sizeType: 'large', tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null },
-      ]
+      dashboard: demoData.dashboard,
+      tiles: demoData.defaultTiles
     };
   }
 }
