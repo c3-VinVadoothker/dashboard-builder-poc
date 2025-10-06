@@ -108,7 +108,7 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
         </div>
 
         {/* Right side - Actions */}
-        <div className="flex items-center space-x-3 flex-shrink-0 flex-1 justify-end max-w-[35%]">
+        <div className="absolute right-3 flex items-center space-x-3">
           {isEditMode && (
             <>
               <button

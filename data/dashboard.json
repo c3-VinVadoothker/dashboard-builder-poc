@@ -2,7 +2,7 @@
   "dashboard": {
     "dashboardId": "dashboard-5",
     "ownerId": "user-1",
-    "dashboardName": "Critical Equipment Alert Triage DashboardCritical Equipment Alert Triage DashboardCritical Equipment Alert Triage DashboardCritical Equipment Alert Triage Dashboard",
+    "dashboardName": "Custom Dashboard",
     "suggestedName": "Critical Equipment Alert Triage Dashboard",
     "layout": [
       [
