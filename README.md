@@ -1,54 +1,25 @@
-# Dashboard Builder POC | C3.ai
+# Dashboard Builder Demo | C3.ai
 
-A proof-of-concept dashboard builder application that allows users to create, edit, and manage interactive data visualizations through a chat-based interface.
+A demo dashboard builder application that allows users to create, edit, and manage interactive data visualizations through a chat-based interface with input system and presentation mode.
 
 ## 🚀 Features
 
 - **Interactive Dashboard Creation**: Drag-and-drop interface for building dashboards
-- **AI-Powered Visualizations**: Chat-based interface for creating data visualizations
+- **AI-Powered Visualizations**: Chat-based interface with cycling input for creating data visualizations
+- **Presentation Mode**: Full-screen presentation mode with smooth transitions
 - **Real-time Editing**: Live preview and editing capabilities
 - **Undo/Redo System**: Full history management for all changes
 - **Responsive Design**: Works on desktop and mobile devices
-- **Multiple Chart Types**: Bar charts, line charts, maps, and more
-- **View/Edit Modes**: Toggle between presentation and editing modes
+- **Multiple Chart Types**: Custom canvas-based charts for different scenarios
+- **Scenario-Based**: Multiple industry scenarios with tailored data and visualizations
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: Next.js 15, React 18, TypeScript
 - **Styling**: Tailwind CSS, Lucide React Icons
 - **State Management**: React Context API with useReducer
-- **Charts**: Custom chart components with D3.js
+- **Charts**: Custom canvas-based chart components
 - **Build Tool**: Turbopack (Next.js)
-
-## 📁 Project Structure
-
-```
-dashboard-builder-poc/
-├── app/                          # Next.js App Router
-│   ├── api/                      # API Routes
-│   │   ├── dashboard/            # Dashboard CRUD operations
-│   │   └── visualization/        # Visualization generation
-│   ├── globals.css               # Global styles
-│   ├── layout.tsx                # Root layout
-│   └── page.tsx                  # Main dashboard page
-├── components/                   # React components
-│   ├── dashboard/                # Dashboard-specific components
-│   │   ├── chart.tsx            # Chart rendering component
-│   │   ├── chat-panel.tsx       # AI chat interface
-│   │   ├── grid.tsx             # Dashboard grid layout
-│   │   ├── header.tsx           # Dashboard header
-│   │   ├── sidebar.tsx          # Navigation sidebar
-│   │   └── tile.tsx             # Individual dashboard tiles
-│   └── ui/                      # Reusable UI components
-├── contexts/                     # React contexts
-│   └── dashboard-context.tsx    # Main dashboard state management
-├── data/                        # Static data and configurations
-│   └── dashboard.json           # Initial dashboard data
-├── hooks/                       # Custom React hooks
-│   └── use-mobile.ts           # Mobile detection hook
-└── lib/                         # Utility functions
-    └── utils.ts                 # Common utilities
-```
 
 ## 🚀 Getting Started
 
@@ -68,15 +39,11 @@ dashboard-builder-poc/
 2. **Install dependencies**
    ```bash
    pnpm install
-   # or
-   npm install
    ```
 
 3. **Start the development server**
    ```bash
    pnpm dev
-   # or
-   npm run dev
    ```
 
 4. **Open your browser**
@@ -86,13 +53,18 @@ dashboard-builder-poc/
 
 ### Creating Visualizations
 
-1. **Enter Edit Mode**: Click the "Edit" button in the header
-2. **Select a Tile**: Click on any empty tile to open the chat panel
-3. **Request a Visualization**: Type natural language requests like:
-   - "Show me the Coefficient of Dispersion by property type"
-   - "Create a map visualization of sales ratios"
-   - "Display Price-Related Differential analysis"
-4. **View Results**: The visualization will appear in the selected tile
+1. **Select a Scenario**: Choose from the demo scenarios page
+2. **Enter Edit Mode**: Click the "Edit" button in the header
+3. **Select a Tile**: Click on any empty tile to open the chat panel
+4. **Use Cycling Input**: Click the input field to cycle through predefined queries
+5. **Send Query**: Click Send or press Enter to generate the visualization
+6. **View Results**: The visualization will appear in the selected tile
+
+### Presentation Mode
+
+1. **Click Presentation Icon**: Click the presentation icon in the sidebar
+2. **Full-Screen Display**: View the C3 AI logo and scenario title
+3. **Exit**: Click anywhere or press Enter/Escape to return to dashboard
 
 ### Managing Dashboards
 
@@ -101,82 +73,171 @@ dashboard-builder-poc/
 - **Undo/Redo**: Use the undo/redo buttons in the header
 - **View Mode**: Switch to view mode for presentation
 
-### Supported Queries
-
-The AI assistant supports various types of data visualization requests:
-
-- **Property Analysis**: COD, PRD, sales ratios
-- **Geographic Data**: Maps with location-based data
-- **Time Series**: Trends over time
-- **Comparative Analysis**: Multi-property comparisons
-
 ## 🔧 Development
 
-### Key Files to Understand
+### Key Files
 
-#### State Management
 - `contexts/dashboard-context.tsx`: Main state management with undo/redo functionality
 - `components/dashboard/grid.tsx`: Grid layout and drag-and-drop logic
-- `components/dashboard/chat-panel.tsx`: AI chat interface
-
-#### Visualization System
-- `components/dashboard/chart.tsx`: Chart rendering component
+- `components/dashboard/chat-panel.tsx`: AI chat interface with cycling input system
+- `components/charts/chart-factory.tsx`: Chart factory for rendering different chart types
 - `app/api/visualization/route.ts`: API for generating visualizations
-- `components/dashboard/tile.tsx`: Individual tile component
+- `data/[scenario]-data.ts`: Scenario-specific data and configurations
 
-#### UI Components
-- `components/dashboard/header.tsx`: Header with edit/view toggle
-- `components/dashboard/sidebar.tsx`: Navigation sidebar
-- `components/ui/`: Reusable UI components
+## 🚀 Adding New Features
 
-### Adding New Features
+### Creating a New Scenario
 
-#### Adding a New Chart Type
-
-1. **Update API Route** (`app/api/visualization/route.ts`):
+1. **Create Scenario Data File** (`data/new-scenario-data.ts`):
    ```typescript
-   'new-chart-type': {
-     title: 'New Chart Title',
-     type: 'new-type',
-     data: { /* chart data */ },
-     metadata: { /* chart metadata */ }
+   export const newScenarioData = {
+     dashboard: {
+       dashboardId: 'dashboard-X',
+       ownerId: 'user-1',
+       dashboardName: 'Custom Dashboard',
+       suggestedName: 'Your Scenario Name',
+       layout: [['tile-1', 'tile-2', 'tile-3', 'tile-4']]
+     },
+     suggestedQueries: {
+       small: [{ query: 'Show basic metric', visualizationType: 'basic-chart' }]
+     },
+     singleQuery: 'Show basic metric',
+     visualizationData: {
+       'basic-chart': {
+         title: 'Basic Chart',
+         type: 'basic-chart',
+         data: { /* your data */ },
+         metadata: { /* metadata */ },
+         assistantMessage: 'Done. The chart now shows basic metrics.'
+       }
+     },
+     queryMatching: {
+       'basic-chart': ['basic', 'metric', 'data']
+     },
+     defaultTiles: [
+       { tileId: 'tile-1', dashboardId: 'dashboard-X', rowIndex: 0, columnIndex: 0, sizeType: 'small' as const, tileTitle: null, visualizationFunction: null, chatSummary: null, cacheId: null, isPopulated: false, isLoading: false, error: null }
+     ]
+   };
+   ```
+
+2. **Add to Demo Data** (`data/demo-data.ts`):
+   ```typescript
+   export const scenarios = {
+     'new-scenario': {
+       id: 'new-scenario',
+       title: 'Your Scenario Title',
+       subtitle: 'Scenario Subtitle',
+       description: 'Description of your scenario',
+       icon: '🔧',
+       color: 'blue',
+       c3Application: 'c3-ai-your-app',
+       dashboard: { dashboardId: 'dashboard-X' }
+     }
+   };
+   ```
+
+3. **Update Dashboard Page** (`app/dashboard/page.tsx`):
+   ```typescript
+   import { newScenarioData } from "@/data/new-scenario-data";
+   
+   case 'new-scenario':
+     setDemoData(newScenarioData);
+     break;
+   ```
+
+4. **Update API Route** (`app/api/visualization/route.ts`):
+   ```typescript
+   import { newScenarioData } from '@/data/new-scenario-data';
+   
+   case 'new-scenario':
+     currentDemoData = newScenarioData;
+     break;
+   ```
+
+### Adding New Chart Types
+
+1. **Create Chart Component** (`components/charts/[scenario]/new-chart.tsx`):
+   ```typescript
+   import React, { useEffect, useRef } from 'react';
+
+   interface NewChartProps {
+     data: any;
+     metadata?: any;
+     sizeType: 'small' | 'medium' | 'large';
+   }
+
+   export function NewChart({ data, metadata, sizeType }: NewChartProps) {
+     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+     useEffect(() => {
+       const canvas = canvasRef.current;
+       if (!canvas || !data) return;
+
+       const ctx = canvas.getContext('2d');
+       if (!ctx) return;
+
+       // Set canvas size and render chart
+       const rect = canvas.getBoundingClientRect();
+       canvas.width = rect.width * window.devicePixelRatio;
+       canvas.height = rect.height * window.devicePixelRatio;
+       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+       // Your chart rendering logic here
+     }, [data, metadata, sizeType]);
+
+     return (
+       <div className="w-full h-full flex flex-col">
+         <canvas ref={canvasRef} className="w-full h-full" />
+       </div>
+     );
    }
    ```
 
-2. **Update Chart Component** (`components/dashboard/chart.tsx`):
+2. **Update Chart Factory** (`components/charts/chart-factory.tsx`):
    ```typescript
-   case 'new-type':
-     return <NewChartComponent data={data} metadata={metadata} />;
+   import { NewChart } from './[scenario]/new-chart';
+   
+   case 'new-chart':
+     return <NewChart data={data} metadata={metadata} sizeType={sizeType} />;
    ```
 
-#### Adding New Query Types
+### Chart Development Guidelines
 
-1. **Update Query Detection** (`app/api/visualization/route.ts`):
-   ```typescript
-   if (query.toLowerCase().includes('new-query-type')) {
-     visualizationType = 'new-chart-type';
-   }
-   ```
+- Use HTML5 Canvas for custom visualizations
+- Implement responsive sizing with `devicePixelRatio`
+- Handle different `sizeType` values (small, medium, large)
+- Include proper error handling for missing data
 
-### Code Style
+#### Data Structure
+```typescript
+interface ChartData {
+  labels?: string[];
+  values?: number[];
+  datasets?: Array<{
+    label: string;
+    values: number[];
+    color?: string;
+  }>;
+}
 
-- **TypeScript**: Strict typing throughout
-- **Components**: Functional components with hooks
-- **State**: Context API with useReducer for complex state
-- **Styling**: Tailwind CSS classes
-- **Icons**: Lucide React icons
+interface ChartMetadata {
+  standardLower?: number;
+  standardUpper?: number;
+  unit?: string;
+}
+```
 
 ## 🧪 Testing
 
 ### Manual Testing Checklist
 
-- [ ] Create visualizations through chat
+- [ ] Create visualizations through cycling input
 - [ ] Drag and drop tiles
 - [ ] Reorder rows
 - [ ] Undo/redo functionality
 - [ ] Switch between edit/view modes
+- [ ] Presentation mode transitions
 - [ ] Responsive design on mobile
-- [ ] Error handling for failed requests
 
 ### Development Testing
 
@@ -193,23 +254,12 @@ pnpm build
 
 ## 🚀 Deployment
 
-### Production Build
-
 ```bash
 # Build the application
 pnpm build
 
 # Start production server
 pnpm start
-```
-
-### Environment Variables
-
-Create a `.env.local` file for local development:
-
-```env
-# Add any environment variables here
-NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
 ### Common Issues
@@ -221,26 +271,19 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 **Visualization Not Loading**
 - Check browser console for errors
 - Verify API routes are working
-- Check network tab for failed requests
 
 **Undo/Redo Not Working**
 - Ensure you're in edit mode
 - Check that actions are being saved to history
-- Verify state management is working correctly
 
-### Getting Help
+## 🤝 Contributing
 
-- Check the browser console for error messages
-- Review the network tab for API failures
-- Examine the React DevTools for state issues
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/new-scenario`
+3. **Make your changes**: Follow the guidelines above
+4. **Test thoroughly**: Use the testing checklist
+5. **Submit a pull request**: Include description of changes
 
-## 📊 Performance
+## 📝 License
 
-- **Bundle Size**: Optimized with Next.js and Turbopack
-- **Loading**: Lazy loading for chart components
-- **State**: Efficient state management with Context API
-- **Rendering**: Optimized re-renders with React.memo where needed
-
----
-
-
+This project is a demo showcasing C3.ai dashboard building capabilities.
