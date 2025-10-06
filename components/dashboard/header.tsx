@@ -51,11 +51,16 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
     return `${minutes} min ago`;
   };
 
+  const truncateTitle = (title: string, maxLength: number = 50) => {
+    if (title.length <= maxLength) return title;
+    return title.substring(0, maxLength) + '...';
+  };
+
   return (
     <div className="bg-white border-b border-gray-300 p-3">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center relative">
         {/* Left side - Title */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 min-w-0 flex-1 max-w-[35%]">
           {isEditingTitle ? (
             <input
               type="text"
@@ -63,30 +68,30 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
               onChange={(e) => setTempTitle(e.target.value)}
               onBlur={handleTitleSave}
               onKeyPress={(e) => e.key === 'Enter' && handleTitleSave()}
-              className="text-lg font-semibold text-gray-900 bg-transparent border-b border-gray-400 focus:outline-none focus:border-gray-600"
+              className="text-lg font-semibold text-gray-900 bg-transparent border-b border-gray-400 focus:outline-none focus:border-gray-600 min-w-0 w-full"
               autoFocus
             />
           ) : (
             <div 
-              className={`flex items-center space-x-2 group ${
+              className={`flex items-center space-x-2 group min-w-0 w-full ${
                 isEditMode ? 'cursor-pointer' : 'cursor-default'
               }`}
               onClick={handleStartEditing}
             >
-              <h2 className="text-lg font-semibold text-gray-900">
-                {state.dashboard.dashboardName}
+              <h2 className="text-lg font-semibold text-gray-900 truncate min-w-0" title={state.dashboard.dashboardName}>
+                {truncateTitle(state.dashboard.dashboardName)}
               </h2>
               {isEditMode && (
-                <Edit3 size={16} className="text-gray-400 group-hover:text-gray-600" />
+                <Edit3 size={16} className="text-gray-400 group-hover:text-gray-600 flex-shrink-0 ml-1" />
               )}
             </div>
           )}
         </div>
 
         {/* Center - Status */}
-        <div className="flex items-center justify-center space-x-4 flex-1">
+        <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
           {isEditMode && (
-            <>
+            <div className="flex items-center space-x-2 bg-white px-2">
               <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 text-gray-800 border border-gray-300">
                 <span className="text-sm font-medium">Editing</span>
               </div>
@@ -98,12 +103,12 @@ export function DashboardHeader({ isEditMode, onToggleEditMode }: DashboardHeade
                   • Unsaved changes
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
 
         {/* Right side - Actions */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 flex-shrink-0 flex-1 justify-end max-w-[35%]">
           {isEditMode && (
             <>
               <button
