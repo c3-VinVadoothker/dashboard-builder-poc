@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 interface UseResizeObserverReturn {
-  ref: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement | null>;
   width: number;
   height: number;
 }

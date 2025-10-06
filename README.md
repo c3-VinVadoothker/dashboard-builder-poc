@@ -278,4 +278,4 @@ pnpm start
 
 ## 📝 License
 
-This project is a demo showcasing C3.ai dashboard building capabilities.
+This project is a demo showcasing C3.ai dashboard building capabificlities.

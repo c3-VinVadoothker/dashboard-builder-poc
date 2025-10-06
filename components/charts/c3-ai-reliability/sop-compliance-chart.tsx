@@ -10,7 +10,7 @@ interface SopComplianceChartProps {
 export function SopComplianceChart({ data, metadata, sizeType }: SopComplianceChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const renderChart = (width, height) => {
+  const renderChart = (width: number, height: number) => {
     const canvas = canvasRef.current;
     if (!canvas || !data) return;
     const ctx = canvas.getContext('2d');
