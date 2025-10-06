@@ -276,14 +276,6 @@ pnpm start
 - Ensure you're in edit mode
 - Check that actions are being saved to history
 
-## 🤝 Contributing
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/new-scenario`
-3. **Make your changes**: Follow the guidelines above
-4. **Test thoroughly**: Use the testing checklist
-5. **Submit a pull request**: Include description of changes
-
 ## 📝 License
 
 This project is a demo showcasing C3.ai dashboard building capabilities.
