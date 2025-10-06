@@ -69,11 +69,75 @@
       "rowIndex": 0,
       "columnIndex": 3,
       "sizeType": "small",
-      "tileTitle": null,
-      "visualizationFunction": null,
-      "chatSummary": null,
+      "tileTitle": "Vibration Severity Trend",
+      "visualizationFunction": {
+        "type": "vibration-severity-chart",
+        "data": {
+          "timeRange": "72 hours",
+          "equipment": "Hydrocracker Compressor C-101",
+          "severityLevels": [
+            {
+              "time": "2024-01-15T00:00:00Z",
+              "severity": 2.1,
+              "status": "Normal"
+            },
+            {
+              "time": "2024-01-15T06:00:00Z",
+              "severity": 2.3,
+              "status": "Normal"
+            },
+            {
+              "time": "2024-01-15T12:00:00Z",
+              "severity": 2.8,
+              "status": "Caution"
+            },
+            {
+              "time": "2024-01-15T18:00:00Z",
+              "severity": 3.2,
+              "status": "Warning"
+            },
+            {
+              "time": "2024-01-16T00:00:00Z",
+              "severity": 3.8,
+              "status": "Warning"
+            },
+            {
+              "time": "2024-01-16T06:00:00Z",
+              "severity": 4.2,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-16T12:00:00Z",
+              "severity": 4.6,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-16T18:00:00Z",
+              "severity": 5.1,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-17T00:00:00Z",
+              "severity": 5.4,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-17T06:00:00Z",
+              "severity": 5.8,
+              "status": "Critical"
+            }
+          ],
+          "thresholds": {
+            "normal": 2.5,
+            "caution": 3,
+            "warning": 4,
+            "critical": 5
+          }
+        }
+      },
+      "chatSummary": "Generated Vibration Severity Trend based on the query: \"Show vibration severity trend\". This visualization shows relevant data with appropriate metrics and standards compliance indicators.",
       "cacheId": null,
-      "isPopulated": false,
+      "isPopulated": true,
       "isLoading": false,
       "error": null
     },
@@ -111,11 +175,75 @@
       "rowIndex": 2,
       "columnIndex": 0,
       "sizeType": "large",
-      "tileTitle": null,
-      "visualizationFunction": null,
-      "chatSummary": null,
+      "tileTitle": "Vibration Severity Trend",
+      "visualizationFunction": {
+        "type": "vibration-severity-chart",
+        "data": {
+          "timeRange": "72 hours",
+          "equipment": "Hydrocracker Compressor C-101",
+          "severityLevels": [
+            {
+              "time": "2024-01-15T00:00:00Z",
+              "severity": 2.1,
+              "status": "Normal"
+            },
+            {
+              "time": "2024-01-15T06:00:00Z",
+              "severity": 2.3,
+              "status": "Normal"
+            },
+            {
+              "time": "2024-01-15T12:00:00Z",
+              "severity": 2.8,
+              "status": "Caution"
+            },
+            {
+              "time": "2024-01-15T18:00:00Z",
+              "severity": 3.2,
+              "status": "Warning"
+            },
+            {
+              "time": "2024-01-16T00:00:00Z",
+              "severity": 3.8,
+              "status": "Warning"
+            },
+            {
+              "time": "2024-01-16T06:00:00Z",
+              "severity": 4.2,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-16T12:00:00Z",
+              "severity": 4.6,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-16T18:00:00Z",
+              "severity": 5.1,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-17T00:00:00Z",
+              "severity": 5.4,
+              "status": "Critical"
+            },
+            {
+              "time": "2024-01-17T06:00:00Z",
+              "severity": 5.8,
+              "status": "Critical"
+            }
+          ],
+          "thresholds": {
+            "normal": 2.5,
+            "caution": 3,
+            "warning": 4,
+            "critical": 5
+          }
+        }
+      },
+      "chatSummary": "Generated Vibration Severity Trend based on the query: \"Create a comprehensive equipment health dashboard showing vibration trends, process variables, historical alerts, maintenance history, SOP compliance status, and predicted time-to-failure with recommended repair actions for the hydrocracker compressor\". This visualization shows relevant data with appropriate metrics and standards compliance indicators.",
       "cacheId": null,
-      "isPopulated": false,
+      "isPopulated": true,
       "isLoading": false,
       "error": null
     }

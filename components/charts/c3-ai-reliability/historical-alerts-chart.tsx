@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useChartResize } from '@/hooks/use-chart-resize';
 
 interface HistoricalAlertsChartProps {
   data: any;
@@ -9,21 +10,19 @@ interface HistoricalAlertsChartProps {
 export function HistoricalAlertsChart({ data, metadata, sizeType }: HistoricalAlertsChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  const renderChart = (width, height) => {
     const canvas = canvasRef.current;
     if (!canvas || !data) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     // Set canvas size
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * window.devicePixelRatio;
-    canvas.height = rect.height * window.devicePixelRatio;
+    canvas.width = width * window.devicePixelRatio;
+    canvas.height = height * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-    const width = rect.width;
-    const height = rect.height;
+    
+    // Set CSS size to match container
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
@@ -174,10 +173,24 @@ export function HistoricalAlertsChart({ data, metadata, sizeType }: HistoricalAl
     ctx.fillText('Number of Alerts', 0, 0);
     ctx.restore();
 
+  };
+
+  // Use the resize hook to handle chart resizing
+  useChartResize(({ width, height }) => {
+    renderChart(width, height);
+  }, [data, metadata, sizeType]);
+
+  // Initial render
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    renderChart(rect.width, rect.height);
   }, [data, metadata, sizeType]);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex items-center justify-center">
       <canvas
         ref={canvasRef}
         className="w-full h-full"

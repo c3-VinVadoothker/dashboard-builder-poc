@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from 'react';
+import { useChartResize } from '@/hooks/use-chart-resize';
 
 interface MarketTrendsChartProps {
   data: any;
@@ -11,21 +12,19 @@ interface MarketTrendsChartProps {
 export function MarketTrendsChart({ data, metadata, sizeType }: MarketTrendsChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  const renderChart = (width, height) => {
     const canvas = canvasRef.current;
     if (!canvas || !data) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     // Set canvas size
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * window.devicePixelRatio;
-    canvas.height = rect.height * window.devicePixelRatio;
+    canvas.width = width * window.devicePixelRatio;
+    canvas.height = height * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-    const width = rect.width;
-    const height = rect.height;
+    
+    // Set CSS size to match container
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
@@ -194,6 +193,20 @@ export function MarketTrendsChart({ data, metadata, sizeType }: MarketTrendsChar
         });
       }
     }
+  };
+
+  // Use the resize hook to handle chart resizing
+  useChartResize(({ width, height }) => {
+    renderChart(width, height);
+  }, [data, metadata, sizeType]);
+
+  // Initial render
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    renderChart(rect.width, rect.height);
   }, [data, metadata, sizeType]);
 
   // Calculate canvas size based on tile size
