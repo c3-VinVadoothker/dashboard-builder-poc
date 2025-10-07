@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Send, MessageCircle, AlertTriangle } from "lucide-react";
+import { X, Send, MessageCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { useDashboard } from "@/contexts/dashboard-context";
 
 interface ChatPanelProps {
@@ -259,7 +259,7 @@ export function ChatPanel({ tileId, isEditMode, onClose }: ChatPanelProps) {
           <div className="flex justify-start">
             <div className="bg-gray-100 text-gray-900 px-3 py-2 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="animate-spin h-4 w-4 border-b-2 border-gray-600"></div>
+                <Loader2 size={16} className="text-gray-600 animate-spin" />
                 <span>Generating visualization...</span>
               </div>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, GripVertical, Trash2, RefreshCw, Info, GripHorizontal } from "lucide-react";
+import { Plus, GripVertical, Trash2, RefreshCw, Info, GripHorizontal, Loader2 } from "lucide-react";
 import { useDashboard } from "@/contexts/dashboard-context";
 import { DashboardTile } from "./tile";
 
@@ -24,7 +24,7 @@ export function DashboardGrid({ isEditMode, onTileSelect }: DashboardGridProps) 
       <div className="p-6 space-y-6 pb-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <Loader2 size={32} className="text-gray-600 animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Loading dashboard...</p>
           </div>
         </div>
